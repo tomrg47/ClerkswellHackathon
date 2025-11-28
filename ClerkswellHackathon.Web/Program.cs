@@ -6,10 +6,18 @@ builder.CreateUmbracoBuilder()
     .AddComposers()
     .Build();
 
+builder.Services.AddControllers();
+
 WebApplication app = builder.Build();
 
 await app.BootUmbracoAsync();
 
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseUmbraco()
     .WithMiddleware(u =>
@@ -22,5 +30,7 @@ app.UseUmbraco()
         u.UseBackOfficeEndpoints();
         u.UseWebsiteEndpoints();
     });
+
+app.MapControllers();
 
 await app.RunAsync();
