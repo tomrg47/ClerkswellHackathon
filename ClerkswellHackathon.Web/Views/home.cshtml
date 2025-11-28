@@ -1,5 +1,52 @@
 ﻿@using Umbraco.Cms.Web.Common.PublishedModels;
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @{
-	Layout = null;
+	Layout = "_Layout.cshtml";
 }
+
+<div class="container">
+    <div class="content-wrapper">
+        
+        <!-- Input View -->
+        <div id="inputView" class="input-view">
+            <h1 class="main-heading">
+                How can we help <br/>
+                <span class="accent-text">you today?</span>
+            </h1>
+            <p class="subtitle">
+                We are here to support you through tough situations. Tell us what is happening, and we will guide you to the right help.
+            </p>
+            
+            <div class="input-section">
+                <div class="crisis-input-container">
+                    <textarea 
+                        id="crisisInput" 
+                        class="crisis-textarea" 
+                        placeholder="Describe your situation... We're here to help."
+                        rows="6"></textarea>
+                    <div>
+                        <button id="submitButton" class="submit-button">
+                            Get Help
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Plan View (hidden initially) -->
+        <div id="planView" class="action-plan-container hidden">
+            <div id="planContent">
+                <!-- Action plan content will be dynamically inserted here -->
+            </div>
+            
+            <div style="text-align: center;">
+                <button id="resetButton" class="reset-button">
+                    Start Over
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="~/js/crisis-app.js"></script>
