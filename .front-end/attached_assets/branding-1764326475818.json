@@ -1,0 +1,96 @@
+{
+  "colorScheme": "light",
+  "fonts": [
+    {
+      "family": "Quicksand",
+      "role": "body"
+    },
+    {
+      "family": "Proxima Nova",
+      "role": "heading"
+    }
+  ],
+  "colors": {
+    "primary": "#080E66",
+    "accent": "#B8D304",
+    "background": "#FFFFFF",
+    "textPrimary": "#080E66",
+    "link": "#080E66"
+  },
+  "typography": {
+    "fontFamilies": {
+      "primary": "Quicksand",
+      "heading": "Proxima Nova"
+    },
+    "fontStacks": {
+      "heading": [
+        "Quicksand"
+      ],
+      "body": [
+        "sans-serif"
+      ],
+      "paragraph": [
+        "Quicksand"
+      ]
+    },
+    "fontSizes": {
+      "h1": "157.8px",
+      "h2": "157.8px",
+      "body": "16.304px"
+    }
+  },
+  "spacing": {
+    "baseUnit": 4,
+    "borderRadius": "0px"
+  },
+  "components": {
+    "input": {
+      "borderColor": "#CCCCCC",
+      "borderRadius": "0px"
+    },
+    "buttonPrimary": {
+      "background": "#B8D304",
+      "textColor": "#000000",
+      "borderRadius": "5.6px",
+      "shadow": "none"
+    }
+  },
+  "images": {
+    "logo": "File saved at: attached_assets/logo.webp",
+    "favicon": "File saved at: attached_assets/favicon.webp",
+    "ogImage": "http://static1.squarespace.com/static/68d2b3b816a0a233d0286b9f/t/690e0b5536dd7e4298d2da01/1762528085867/_Restore+Hope+MASTER+logo+%281%29.png?format=1500w"
+  },
+  "__framework_hints": [],
+  "__llm_logo_reasoning": {
+    "selectedIndex": 0,
+    "reasoning": "The logo at index 0 matches the brand name 'Restore Hope' and is located in the header, linking to the homepage, making it the primary brand logo.",
+    "confidence": 0.95
+  },
+  "__llm_button_reasoning": {
+    "primary": {
+      "index": 3,
+      "text": "Donate",
+      "reasoning": "The 'Donate' button is the primary CTA as it has vibrant green color (#B8D304) and is action-oriented, encouraging users to take a significant action for the charity."
+    },
+    "secondary": {
+      "index": 4,
+      "text": "Explore our programmes",
+      "reasoning": "The 'Explore our programmes' button is selected as secondary because it also has a vibrant green background but is less prominent than the primary CTA. However, it is still from the same color group, so it is not valid. The secondary button is set to -1 as all remaining buttons share the same color group as the primary button."
+    },
+    "confidence": 0.9
+  },
+  "personality": {
+    "tone": "professional",
+    "energy": "medium",
+    "targetAudience": "Individuals and organizations interested in charity and community support."
+  },
+  "designSystem": {
+    "framework": "custom",
+    "componentLibrary": null
+  },
+  "confidence": {
+    "buttons": 0.9,
+    "colors": 0.95,
+    "overall": 0.925
+  }
+}

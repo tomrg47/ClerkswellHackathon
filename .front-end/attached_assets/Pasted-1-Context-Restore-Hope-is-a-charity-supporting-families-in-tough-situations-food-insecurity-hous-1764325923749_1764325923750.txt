@@ -1,0 +1,120 @@
+1. Context
+
+Restore Hope is a charity supporting families in tough situations (food insecurity, housing issues, income shocks, safety concerns, health problems).
+
+They want a dignified digital experience that:
+
+Helps families quickly understand what to do next in a crisis.
+
+Makes it easy for staff to see people’s needs, record engagement, and track progress over time.
+
+Is simple, mobile-friendly, and usable by people with low digital confidence.
+
+The AI concept is:
+
+“An AI support worker with a laminated flowchart — but with much nicer UX.”
+
+2. Core Idea to Implement
+
+Build a small web MVP with two main parts:
+
+A. Crisis Helper Agent (rules + LLM)
+
+Input: user types free-text crisis messages, e.g.
+
+“My landlord has served a notice.”
+
+“My energy is about to be cut off.”
+
+“I have no food until Monday.”
+
+Engine behaviour (must be rule-based, not pure LLM):
+
+Assess urgency: hours | days | weeks.
+
+Categorise into one main need category:
+Housing | Food | Income | Safety | Health.
+
+Run through a hand-crafted decision tree / state machine for that category, asking short, structured questions such as:
+
+“Have you already spoken to your council’s housing options team?”
+
+“Are there children in your household?”
+
+“Are you currently at risk of violence at home?”
+
+The decision tree outputs a ranked action plan, e.g.
+
+“Call X line (open now).”
+
+“Go to Y office (address, opening times, what to bring).”
+
+“Ask Z for an emergency hardship payment.”
+
+LLM is only used for:
+
+Understanding free-text and mapping it into structured fields the engine needs (category, urgency, key facts / flags).
+
+Generating friendly, low-jargon explanations of the next steps.
+
+NO hallucinated services:
+
+The system must only ever suggest services from a vetted service registry (a local JSON / DB table you define with 5–10 example services).
+
+Output format (API):
+
+category
+
+urgency
+
+questions (if more info needed)
+
+action_plan[] with:
+
+priority_rank
+
+title
+
+description
+
+service_id (from registry)
+
+risk_flags[] (e.g. “children_in_household”, “domestic_violence_risk”).
+
+B. Progress & Engagement Tracking (two-sided)
+
+For families (user side):
+
+Very simple “My Journey” screen, showing:
+
+Basic profile info (first name / household nickname).
+
+“What you told us you’re struggling with” (top 1–2 categories).
+
+List of actions suggested and which ones they’ve marked as “done”.
+
+List of events attended (community sessions, workshops, etc.).
+
+A basic booking / register-interest flow for events (name + phone/email + pick an event).
+
+For staff / volunteers (charity side):
+
+Light “admin dashboard” that shows:
+
+List of families (or anonymised IDs) with:
+
+latest category, urgency, and risk flags
+
+last contact date
+
+Activity log: crisis chats, events attended, actions recommended.
+
+Simple filters: by category, by urgency (e.g. see all “hours” urgency cases).
+
+Data capture principles:
+
+Keep forms super short and mobile-friendly.
+
+Assume users may not like long forms or techy language.
+
+Use simple copy: “What are you struggling with most right now?” instead of jargon.
