@@ -1,0 +1,190 @@
+{
+  "documentTypes": {
+    "event": {
+      "name": "Event",
+      "alias": "event",
+      "icon": "icon-calendar",
+      "description": "Single event detail page",
+      "allowAsRoot": false,
+      "isElement": false,
+      "compositions": [],
+      "properties": [
+        {
+          "name": "Event Title",
+          "alias": "eventTitle",
+          "description": "The title of the event",
+          "dataTypeEditorAlias": "Umbraco.TextBox",
+          "mandatory": true,
+          "sortOrder": 1
+        },
+        {
+          "name": "Event Description",
+          "alias": "eventDescription",
+          "description": "Full description of the event",
+          "dataTypeEditorAlias": "Umbraco.TinyMCE",
+          "mandatory": true,
+          "sortOrder": 2
+        },
+        {
+          "name": "Event Start Date",
+          "alias": "eventStartDate",
+          "description": "When the event starts",
+          "dataTypeEditorAlias": "Umbraco.DateTime",
+          "mandatory": true,
+          "sortOrder": 3,
+          "config": {
+            "format": "YYYY-MM-DD HH:mm"
+          }
+        },
+        {
+          "name": "Event End Date",
+          "alias": "eventEndDate",
+          "description": "When the event ends",
+          "dataTypeEditorAlias": "Umbraco.DateTime",
+          "mandatory": true,
+          "sortOrder": 4,
+          "config": {
+            "format": "YYYY-MM-DD HH:mm"
+          }
+        },
+        {
+          "name": "Location",
+          "alias": "eventLocation",
+          "description": "Where the event takes place",
+          "dataTypeEditorAlias": "Umbraco.TextBox",
+          "mandatory": true,
+          "sortOrder": 5
+        },
+        {
+          "name": "Event Type",
+          "alias": "eventType",
+          "description": "Type/category of event",
+          "dataTypeEditorAlias": "Umbraco.DropDown.Flexible",
+          "mandatory": false,
+          "sortOrder": 6,
+          "config": {
+            "multiple": false,
+            "items": [
+              "Community Event",
+              "Workshop",
+              "Advice Session",
+              "Social",
+              "Job Fair",
+              "Food Service",
+              "Training",
+              "Support Group"
+            ]
+          }
+        },
+        {
+          "name": "Max Attendees",
+          "alias": "maxAttendees",
+          "description": "Maximum number of people who can attend",
+          "dataTypeEditorAlias": "Umbraco.Integer",
+          "mandatory": false,
+          "sortOrder": 7
+        },
+        {
+          "name": "Requires Registration",
+          "alias": "requiresRegistration",
+          "description": "Does this event require pre-registration?",
+          "dataTypeEditorAlias": "Umbraco.TrueFalse",
+          "mandatory": false,
+          "sortOrder": 8
+        },
+        {
+          "name": "Contact Email",
+          "alias": "contactEmail",
+          "description": "Contact email for event inquiries",
+          "dataTypeEditorAlias": "Umbraco.EmailAddress",
+          "mandatory": false,
+          "sortOrder": 9
+        },
+        {
+          "name": "Contact Phone",
+          "alias": "contactPhone",
+          "description": "Contact phone number",
+          "dataTypeEditorAlias": "Umbraco.TextBox",
+          "mandatory": false,
+          "sortOrder": 10
+        },
+        {
+          "name": "Event Image",
+          "alias": "eventImage",
+          "description": "Main image for the event",
+          "dataTypeEditorAlias": "Umbraco.MediaPicker3",
+          "mandatory": false,
+          "sortOrder": 11,
+          "config": {
+            "multiple": false,
+            "validationLimit": {
+              "min": 0,
+              "max": 1
+            }
+          }
+        },
+        {
+          "name": "Tags",
+          "alias": "tags",
+          "description": "Tags for categorizing the event",
+          "dataTypeEditorAlias": "Umbraco.Tags",
+          "mandatory": false,
+          "sortOrder": 12
+        }
+      ],
+      "allowedTemplates": ["event"],
+      "defaultTemplate": "event"
+    },
+    "eventsListing": {
+      "name": "Events Listing",
+      "alias": "eventsListing",
+      "icon": "icon-calendar-alt",
+      "description": "Page listing all events",
+      "allowAsRoot": true,
+      "isElement": false,
+      "compositions": [],
+      "properties": [
+        {
+          "name": "Page Title",
+          "alias": "pageTitle",
+          "description": "Override the default page title",
+          "dataTypeEditorAlias": "Umbraco.TextBox",
+          "mandatory": false,
+          "sortOrder": 1
+        },
+        {
+          "name": "Introduction",
+          "alias": "introduction",
+          "description": "Introductory text for the events listing",
+          "dataTypeEditorAlias": "Umbraco.TextArea",
+          "mandatory": false,
+          "sortOrder": 2
+        }
+      ],
+      "allowedChildNodeTypes": ["event"],
+      "allowedTemplates": ["eventsListing"],
+      "defaultTemplate": "eventsListing"
+    }
+  },
+  "templates": {
+    "event": {
+      "name": "Event",
+      "alias": "event",
+      "masterTemplate": "_Layout",
+      "path": "Views/Event.cshtml"
+    },
+    "eventsListing": {
+      "name": "Events Listing",
+      "alias": "eventsListing",
+      "masterTemplate": "_Layout",
+      "path": "Views/EventsListing.cshtml"
+    }
+  },
+  "instructions": {
+    "step1": "Create the Event Type dropdown Data Type first",
+    "step2": "Create both Document Types using the specifications above",
+    "step3": "Create templates and copy code from the respective .cshtml files",
+    "step4": "Update Events Listing to allow Event as child node type",
+    "step5": "Create content: Events Listing page, then Event pages as children"
+  }
+}

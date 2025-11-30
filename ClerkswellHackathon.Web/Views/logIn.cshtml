@@ -1,0 +1,109 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = "_Layout.cshtml";
+}
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h1 class="login-title">Welcome Back</h1>
+            <p class="login-subtitle">Enter your details to access your account.</p>
+        </div>
+
+        <div class="login-tabs">
+            <button id="usernameTab" class="tab-button active">Username</button>
+            <button id="phoneTab" class="tab-button">Phone</button>
+        </div>
+
+        <div id="errorMessage" class="error-message hidden"></div>
+        <div id="successMessage" class="success-message hidden"></div>
+
+        <!-- Username/Password Login Form -->
+        @* <form id="usernameLoginForm" class="login-form">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    class="form-input" 
+                    placeholder="Enter your username"
+                    required
+                    autocomplete="username"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input" 
+                    placeholder="Enter your password"
+                    required
+                    autocomplete="current-password"
+                />
+            </div>
+
+            <button type="submit" id="usernameSubmitButton" class="login-button">
+                <span id="usernameButtonText">Log In</span>
+            </button>
+        </form> *@
+
+        <!-- Phone Number Login Form -->
+        <form id="phoneLoginForm" class="login-form hidden">
+            <div id="phoneStep" class="phone-step">
+                <div class="form-group">
+                    <label for="phoneNumber" class="form-label">Phone Number</label>
+                    <input 
+                        type="tel" 
+                        id="phoneNumber" 
+                        name="phoneNumber" 
+                        class="form-input" 
+                        placeholder="+44 7700 900000"
+                        required
+                        autocomplete="tel"
+                    />
+                </div>
+
+                <button type="submit" id="phoneSubmitButton" class="login-button">
+                    <span id="phoneButtonText">Send Code</span>
+                </button>
+            </div>
+
+            <div id="verifyStep" class="verify-step hidden">
+                <div class="form-group">
+                    <label for="verificationCode" class="form-label">Verification Code</label>
+                    <input 
+                        type="text" 
+                        id="verificationCode" 
+                        name="verificationCode" 
+                        class="form-input" 
+                        placeholder="Enter 6-digit code"
+                        required
+                        maxlength="6"
+                        pattern="[0-9]{6}"
+                    />
+                </div>
+
+                <button type="button" id="verifyButton" class="login-button">
+                    <span id="verifyButtonText">Verify & Log In</span>
+                </button>
+
+                <button type="button" id="resendCodeButton" class="resend-button">
+                    Resend Code
+                </button>
+            </div>
+        </form>
+
+        <div class="login-footer">
+            <p>Don't have an account? <a href="@Url.Action("Index", "Home")" class="login-link">Get Help</a> to start.</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/login.js"></script>
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/umbraco-package.json",
+  "name": "Families Management",
+  "version": "1.0.0",
+  "extensions": [
+    {
+      "type": "section",
+      "alias": "familiesManagement",
+      "name": "Families Management",
+      "meta": {
+        "label": "Families",
+        "pathname": "families"
+      }
+    },
+    {
+      "type": "sectionView",
+      "alias": "familiesManagement.view",
+      "name": "Families Management View",
+      "element": "/App_Plugins/FamiliesManagement/dashboard.js",
+      "meta": {
+        "label": "Families Overview",
+        "pathname": "overview",
+        "icon": "icon-users"
+      },
+      "conditions": [
+        {
+          "alias": "Umb.Condition.SectionAlias",
+          "match": "familiesManagement"
+        }
+      ]
+    }
+  ]
+}

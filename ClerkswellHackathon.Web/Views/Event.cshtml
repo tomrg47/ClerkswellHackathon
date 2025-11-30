@@ -1,0 +1,424 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = "_Layout.cshtml";
+    
+    // Get event details from page properties
+    var title = Model.Value<string>("eventTitle") ?? Model.Name;
+    var description = Model.Value<string>("eventDescription");
+    var startDate = Model.Value<DateTime>("eventStartDate");
+    var endDate = Model.Value<DateTime>("eventEndDate");
+    var location = Model.Value<string>("eventLocation");
+    var eventType = Model.Value<string>("eventType");
+    var maxAttendees = Model.Value<int>("maxAttendees");
+    var currentAttendees = Model.Value<int>("currentAttendees");
+    var requiresRegistration = Model.Value<bool>("requiresRegistration");
+    var contactEmail = Model.Value<string>("contactEmail");
+    var contactPhone = Model.Value<string>("contactPhone");
+    var imageUrl = Model.Value<string>("imageUrl");
+    var isFeatured = Model.Value<bool>("isFeatured");
+    var tags = Model.Value<string>("tags")?.Split(',').Select(t => t.Trim()).Where(t => !string.IsNullOrEmpty(t));
+}
+
+<div class="event-detail">
+    <div class="event-hero">
+        @if (!string.IsNullOrEmpty(imageUrl))
+        {
+            <img src="@imageUrl" alt="@title" class="event-hero-image">
+        }
+        else
+        {
+            <div class="event-hero-placeholder">
+                <span class="event-icon">📅</span>
+            </div>
+        }
+        
+        <div class="event-hero-overlay">
+            <div class="container">
+                <h1>@title</h1>
+                @if (isFeatured)
+                {
+                    <span class="featured-badge">⭐ Featured Event</span>
+                }
+                @if (tags != null && tags.Any())
+                {
+                    <div class="event-tags">
+                        @foreach (var tag in tags)
+                        {
+                            <span class="tag">@tag</span>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="container event-content">
+        <div class="event-main">
+            <div class="event-info-card">
+                <div class="info-row">
+                    <div class="info-icon">📅</div>
+                    <div class="info-content">
+                        <strong>Date & Time</strong>
+                        <p>
+                            @startDate.ToString("dddd, d MMMM yyyy")
+                            <br>
+                            @startDate.ToString("h:mm tt") - @endDate.ToString("h:mm tt")
+                        </p>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-icon">📍</div>
+                    <div class="info-content">
+                        <strong>Location</strong>
+                        <p>@location</p>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-icon">🎯</div>
+                    <div class="info-content">
+                        <strong>Event Type</strong>
+                        <p>@eventType</p>
+                    </div>
+                </div>
+
+                @if (maxAttendees > 0)
+                {
+                    <div class="info-row">
+                        <div class="info-icon">👥</div>
+                        <div class="info-content">
+                            <strong>Capacity</strong>
+                            <p>@currentAttendees / @maxAttendees attendees</p>
+                            @if (maxAttendees > 0)
+                            {
+                                var percentFull = (currentAttendees * 100.0 / maxAttendees);
+                                <div class="capacity-bar">
+                                    <div class="capacity-fill" style="width: @percentFull%"></div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="event-description">
+                <h2>About This Event</h2>
+                @Html.Raw(description)
+            </div>
+
+            @if (!string.IsNullOrEmpty(contactEmail) || !string.IsNullOrEmpty(contactPhone))
+            {
+                <div class="event-contact">
+                    <h3>Contact Information</h3>
+                    @if (!string.IsNullOrEmpty(contactEmail))
+                    {
+                        <p><strong>Email:</strong> <a href="mailto:@contactEmail">@contactEmail</a></p>
+                    }
+                    @if (!string.IsNullOrEmpty(contactPhone))
+                    {
+                        <p><strong>Phone:</strong> <a href="tel:@contactPhone">@contactPhone</a></p>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="event-sidebar">
+            @if (requiresRegistration)
+            {
+                <div class="registration-card">
+                    <h3>Registration Required</h3>
+                    <p>This event requires advance registration.</p>
+                    @if (maxAttendees > 0 && currentAttendees >= maxAttendees)
+                    {
+                        <p class="fully-booked">❌ This event is fully booked</p>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" onclick="alert('Registration system would be integrated here')">
+                            Register Now
+                        </button>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="registration-card">
+                    <h3>Open to All</h3>
+                    <p>No registration required. Just show up!</p>
+                </div>
+            }
+
+            <div class="share-card">
+                <h3>Share This Event</h3>
+                <div class="share-buttons">
+                    <button onclick="if(navigator.share) { navigator.share({title: '@title', text: '@title', url: window.location.href}) } else { alert('Link copied: ' + window.location.href); navigator.clipboard.writeText(window.location.href); }">
+                        🔗 Share Event
+                    </button>
+                </div>
+            </div>
+
+            @if (Model.Parent != null)
+            {
+                <div class="back-link">
+                    <a href="@Model.Parent.Url()">← Back to All Events</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .event-detail {
+        margin-top: -20px;
+    }
+
+    .event-hero {
+        position: relative;
+        height: 400px;
+        overflow: hidden;
+    }
+
+    .event-hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .event-hero-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .event-icon {
+        font-size: 120px;
+    }
+
+    .event-hero-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        color: white;
+        padding: 40px 0 30px;
+    }
+
+    .event-hero-overlay h1 {
+        margin: 0 0 15px 0;
+        font-size: 42px;
+    }
+
+    .featured-badge {
+        display: inline-block;
+        background: #ffd100;
+        color: #1b264f;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .event-tags {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .tag {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 14px;
+    }
+
+    .event-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
+        margin-top: 40px;
+        margin-bottom: 60px;
+    }
+
+    .event-info-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+
+    .info-row {
+        display: flex;
+        gap: 20px;
+        padding: 20px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-icon {
+        font-size: 32px;
+        width: 50px;
+        text-align: center;
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .info-content strong {
+        display: block;
+        margin-bottom: 5px;
+        color: #1b264f;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-content p {
+        margin: 0;
+        color: #444;
+        font-size: 16px;
+    }
+
+    .capacity-bar {
+        margin-top: 10px;
+        height: 8px;
+        background: #f0f0f0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .capacity-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4caf50, #8bc34a);
+        transition: width 0.3s ease;
+    }
+
+    .event-description {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+
+    .event-description h2 {
+        margin: 0 0 20px 0;
+        color: #1b264f;
+    }
+
+    .event-contact {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+    }
+
+    .event-contact h3 {
+        margin: 0 0 15px 0;
+        color: #1b264f;
+    }
+
+    .event-contact p {
+        margin: 8px 0;
+    }
+
+    .event-contact a {
+        color: #1b264f;
+        text-decoration: underline;
+    }
+
+    .registration-card,
+    .share-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+    }
+
+    .registration-card h3,
+    .share-card h3 {
+        margin: 0 0 15px 0;
+        color: #1b264f;
+    }
+
+    .fully-booked {
+        color: #c62828;
+        font-weight: 600;
+        margin: 15px 0;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        background: #1b264f;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #ffd100;
+        color: #1b264f;
+    }
+
+    .share-buttons button {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .share-buttons button:hover {
+        background: #f8f9fa;
+    }
+
+    .back-link {
+        text-align: center;
+    }
+
+    .back-link a {
+        color: #1b264f;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .back-link a:hover {
+        color: #ffd100;
+    }
+
+    @@media (max-width: 768px) {
+        .event-content {
+            grid-template-columns: 1fr;
+        }
+
+        .event-hero {
+            height: 250px;
+        }
+
+        .event-hero-overlay h1 {
+            font-size: 28px;
+        }
+    }
+</style>

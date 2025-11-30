@@ -19,5 +19,7 @@
     @await Html.PartialAsync("Partials/components/Header");
 
     @RenderBody()
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

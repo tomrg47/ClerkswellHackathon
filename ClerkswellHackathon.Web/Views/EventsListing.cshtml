@@ -1,0 +1,388 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = "_Layout.cshtml";
+    
+    var pageTitle = Model.Value<string>("pageTitle");
+    var introduction = Model.Value<string>("introduction");
+}
+
+<div class="events-listing">
+    <div class="events-header">
+        <div class="container">
+            <h1>@(pageTitle ?? "Upcoming Events")</h1>
+            <p>@(introduction ?? "Join us for community events, workshops, and support sessions")</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="events-filters">
+            <input type="text" id="eventSearch" placeholder="Search events..." class="search-input">
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Events</button>
+                <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+                <button class="filter-btn" data-filter="featured">Featured</button>
+            </div>
+        </div>
+
+        <div id="eventsContainer" class="events-grid">
+            <div class="loading">Loading events...</div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .events-listing {
+        padding: 40px 0;
+    }
+
+    .events-header {
+        background: linear-gradient(135deg, #1b264f 0%, #2a3f7f 100%);
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 40px;
+    }
+
+    .events-header h1 {
+        margin: 0 0 10px 0;
+        font-size: 42px;
+    }
+
+    .events-header p {
+        margin: 0;
+        font-size: 18px;
+        opacity: 0.9;
+    }
+
+    .events-filters {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .search-input {
+        padding: 12px 20px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        width: 300px;
+        max-width: 100%;
+    }
+
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .filter-btn {
+        padding: 10px 20px;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+        background: #1b264f;
+        color: white;
+        border-color: #1b264f;
+    }
+
+    .events-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 30px;
+        margin-bottom: 60px;
+    }
+
+    .event-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
+
+    .event-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .event-image {
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .event-image-placeholder {
+        height: 200px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 64px;
+    }
+
+    .event-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #ffd100;
+        color: #1b264f;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .event-body {
+        padding: 25px;
+    }
+
+    .event-title {
+        margin: 0 0 10px 0;
+        color: #1b264f;
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .event-meta {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .event-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0;
+    }
+
+    .event-description {
+        color: #444;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .event-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+
+    .event-tag {
+        background: #f0f0f0;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .event-footer {
+        padding: 15px 25px;
+        background: #f8f9fa;
+        border-top: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .event-type {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .event-cta {
+        color: #1b264f;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .event-cta:hover {
+        color: #ffd100;
+    }
+
+    .loading {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 60px;
+        color: #666;
+    }
+
+    .no-events {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 60px;
+        color: #666;
+    }
+
+    @@media (max-width: 768px) {
+        .events-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .events-filters {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-input {
+            width: 100%;
+        }
+
+        .filter-buttons {
+            width: 100%;
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<script>
+    let allEvents = [];
+    let currentFilter = 'all';
+
+    async function loadEvents() {
+        try {
+            const response = await fetch('/umbraco/backoffice/api/events/published');
+            if (!response.ok) {
+                throw new Error('Failed to load events');
+            }
+            allEvents = await response.json();
+            displayEvents(allEvents);
+        } catch (error) {
+            console.error('Error loading events:', error);
+            document.getElementById('eventsContainer').innerHTML = 
+                '<div class="no-events">Unable to load events. Please try again later.</div>';
+        }
+    }
+
+    function displayEvents(events) {
+        const container = document.getElementById('eventsContainer');
+        
+        if (events.length === 0) {
+            container.innerHTML = '<div class="no-events">No events found</div>';
+            return;
+        }
+
+        container.innerHTML = events.map(event => {
+            const startDate = new Date(event.startDate);
+            const imageHtml = event.imageUrl 
+                ? `<div class="event-image" style="background-image: url('${event.imageUrl}')"></div>`
+                : '<div class="event-image-placeholder">📅</div>';
+            
+            const featuredBadge = event.isFeatured 
+                ? '<div class="event-badge">⭐ Featured</div>' 
+                : '';
+
+            const tags = event.tags && event.tags.length > 0
+                ? `<div class="event-tags">${event.tags.map(tag => `<span class="event-tag">${tag}</span>`).join('')}</div>`
+                : '';
+
+            // Create URL-friendly slug from title
+            const eventSlug = event.title.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '');
+            
+            const eventUrl = `${window.location.pathname.replace(/\/$/, '')}/${eventSlug}`;
+
+            // Escape HTML to prevent XSS
+            const escapeHtml = (text) => {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            };
+
+            const safeTitle = escapeHtml(event.title);
+            const safeDescription = escapeHtml(event.description);
+            const safeLocation = escapeHtml(event.location);
+            const safeEventType = escapeHtml(event.eventType);
+
+            return `
+                <div class="event-card" onclick="window.location.href='${eventUrl}'">
+                    ${imageHtml}
+                    ${featuredBadge}
+                    <div class="event-body">
+                        <h2 class="event-title">${safeTitle}</h2>
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                📅 ${startDate.toLocaleDateString('en-GB', { 
+                                    weekday: 'short',
+                                    day: 'numeric', 
+                                    month: 'short', 
+                                    year: 'numeric' 
+                                })}
+                            </div>
+                            <div class="event-meta-item">
+                                🕐 ${startDate.toLocaleTimeString('en-GB', { 
+                                    hour: '2-digit', 
+                                    minute: '2-digit' 
+                                })}
+                            </div>
+                            <div class="event-meta-item">
+                                📍 ${safeLocation}
+                            </div>
+                        </div>
+                        <p class="event-description">${safeDescription.substring(0, 120)}${safeDescription.length > 120 ? '...' : ''}</p>
+                        ${tags}
+                    </div>
+                    <div class="event-footer">
+                        <span class="event-type">${safeEventType}</span>
+                        <a href="${eventUrl}" class="event-cta" onclick="event.stopPropagation()">Learn More →</a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function filterEvents() {
+        let filtered = [...allEvents];
+        const searchText = document.getElementById('eventSearch').value.toLowerCase();
+
+        if (searchText) {
+            filtered = filtered.filter(event => 
+                event.title.toLowerCase().includes(searchText) ||
+                event.description.toLowerCase().includes(searchText) ||
+                event.location.toLowerCase().includes(searchText) ||
+                event.eventType.toLowerCase().includes(searchText)
+            );
+        }
+
+        if (currentFilter === 'upcoming') {
+            const now = new Date();
+            filtered = filtered.filter(event => new Date(event.startDate) >= now);
+        } else if (currentFilter === 'featured') {
+            filtered = filtered.filter(event => event.isFeatured);
+        }
+
+        displayEvents(filtered);
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        loadEvents();
+
+        document.getElementById('eventSearch').addEventListener('input', filterEvents);
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                filterEvents();
+            });
+        });
+    });
+</script>
